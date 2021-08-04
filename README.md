@@ -79,3 +79,10 @@ python src/open-cv-first-touch.py
 e a seguinte imagem deverá aparecer na tela. É possível que o script demore um pouco.
 
 ![lenna](img/readme/lenna.png)
+
+
+## Correção de Perspectiva
+
+
+A principal funcionalidade para  desafio é a correção de perspectiva, portanto, o primeiro passo do nosso processo de solução será esta correção.
+

@@ -1,3 +1,4 @@
+# Autor: Caio Maia - caiomaia3@gmail.com
 #  Este script tem o objetivo de experimentar as funções básicas do open-cv
 import cv2
 import numpy as np
