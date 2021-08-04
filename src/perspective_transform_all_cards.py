@@ -10,9 +10,9 @@ import card_transformation as ct
 imported_image = io.imread("/home/senai/Projects/Active/desafio-visao-computacional/img/cards.jpg")
 imported_image = cv2.cvtColor(imported_image,cv2.COLOR_BGR2RGB)
 
-# cv2.imshow('myImage2',imported_image)
-# cv2.waitKey(0) 
-# cv2.destroyAllWindows()
+cv2.imshow('myImage2',imported_image)
+cv2.waitKey(0) 
+cv2.destroyAllWindows()
 
 # 1 ---- 2
 # |	 |
