@@ -25,9 +25,9 @@ k_spades = np.float32([[111,217],
 	[154,483],
 	[355,439]])
 
-k_dimonds = np.float32([[273,116],
-	     [453,129],
-	     [273,362],
+k_dimonds = np.float32([[275,116],
+	     [453,127],
+	     [259,366],
 	     [457,373]])
 
 # k_dimonds_top_line = [[276,116],[453,126]]
@@ -60,6 +60,24 @@ cv2.drawContours(mask,[triangle],0,255,-1)
 masked = cv2.bitwise_and(base_image,base_image,mask=mask)
 masked_flipped = cv2.flip(masked,-1)
 final_image = cv2.add(masked,masked_flipped)
-cv2.imshow('myImage2',final_image)
+
+
+# cv2.imshow('myImage2',final_image)
+# cv2.waitKey(0) 
+# cv2.destroyAllWindows()
+
+mask2 = np.zeros(base_image.shape[:2], dtype="uint8")
+
+triangle = np.array([[94,350],
+	     [0,350],
+	     [0,100],
+	     [25,100]],np.int32)
+cv2.drawContours(mask2,[triangle],0,255,-1)
+mask3 = cv2.bitwise_not(mask2)
+masked1 = cv2.bitwise_and(base_image,base_image,mask=mask3)
+masked2 = cv2.bitwise_and(masked_flipped,masked_flipped,mask=mask2)
+
+solution2 = cv2.add(masked1,masked2)
+cv2.imshow('myImage2',solution2)
 cv2.waitKey(0) 
 cv2.destroyAllWindows()
