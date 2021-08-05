@@ -157,9 +157,12 @@ No início deste método são definidos a proporcionalidade da imagem no final d
 
 Finalmente é aplicada a matriz de transformação na ``input_imagem``, por meio do método ``.warpPerspective()`` e retorna ``output_image``, a imagem transformada.
 
+Ao executar o script ``perspective_transform.py`` a seguinte imagem do Rei de Espadas é mostrada na tela, sendo tirada e corrigida a partir da foto original ``./img/cards.jpg``:
+
+![k-espadas](img/k-espadas.png)
+
 
 
 ## Correção da Oclusão
-
 
 
