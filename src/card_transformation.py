@@ -21,8 +21,6 @@ def perspective(input_image,source_points):
 	output_image = cv2.warpPerspective(input_image,transformation_matrix,(card_width,card_height))
 	return output_image
 
-def mirror(input_image):
-	return cv2.flip(input_image)
 
 def line_mid_point(points):
 	pt0 = np.float32(points[0])
@@ -31,3 +29,12 @@ def line_mid_point(points):
 	pt_mid = pt_mid_float.astype(int)
 	return pt_mid.tolist()
 
+def show_image(image_name,image):
+	cv2.imshow(image_name,image)
+	cv2.waitKey(0) 
+	cv2.destroyAllWindows()
+
+def create_new_mask(base_image,contour):
+	mask = np.zeros(base_image.shape[:2], dtype="uint8")
+	cv2.drawContours(mask,[contour],0,255,-1)
+	return mask
