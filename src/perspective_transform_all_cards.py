@@ -1,5 +1,5 @@
 #  Autor: Caio Maia - caiomaia3@gmail.com
-#  Este script tem o objetivo de experimentar as funções básicas do open-cv
+#  Este script tem o objetivo de resolver um desafio proposto no Centro de Competência em Robótica e Sistemas Autônomos do SENAI
 import cv2
 import numpy as np
 from numpy.lib.utils import source
