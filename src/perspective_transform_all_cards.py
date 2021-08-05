@@ -18,7 +18,7 @@ cv2.destroyAllWindows()
 # |	 |
 # |	 |
 # |	 |
-# 4 ---- 3
+# 3 ---- 4
 
 k_spades = np.float32([[111,217],
         [289,184],
