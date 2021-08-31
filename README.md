@@ -79,3 +79,160 @@ python src/open-cv-first-touch.py
 e a seguinte imagem deverá aparecer na tela. É possível que o script demore um pouco.
 
 ![lenna](img/readme/lenna.png)
+
+
+## Correção de Perspectiva
+
+
+A principal funcionalidade para  desafio é a correção de perspectiva, portanto, o primeiro passo do nosso processo de solução será esta correção.
+Para realizar esta tarefa utilizaremos o script ``perspective_transform.py``, que possui o seguinte código:
+
+```python
+#  Autor: Caio Maia - caiomaia3@gmail.com
+#  Este script tem o objetivo de experimentar as funções básicas do open-cv
+import cv2
+import numpy as np
+from skimage import io
+import card_transformation as ct
+
+imported_image = io.imread("./img/cards.jpg")
+imported_image = cv2.cvtColor(imported_image,cv2.COLOR_BGR2RGB)
+
+source_points = np.float32([[111,217],
+        [289,184],
+	[154,483],
+	[355,439]])
+
+cv2.imshow('myImage2',ct.perspective(imported_image,source_points))
+cv2.waitKey(0) 
+cv2.destroyAllWindows()
+```
+
+Na primeira secção do código são realizadas importações das bibliotecas: OpenCV, Numpy, scikit-image. A OpenCV é a biblioteca que mais iremos utilizar, para realizar transformações nas imagens de interesse. A Numpy é um biblioteca numérica para o Python e em nosso contexto oferece uma base para o trabalho no OpenCV, pois oferece a estrutura de dado que permite a representação das imagens em forma de array. Já a scikit-image é utilizada para realizar importação de imagens ``.jpg`` no formato de array do Numpy.
+
+O pacote ``card_transformation.py`` é de autoria própria e abarca as funções que utilizaremos.
+
+A variável source_points` contém um array com os pontos, pares ordenados com a localização do pixel, que definem a região em que será realizada a transformação.
+
+```python
+source_points = np.float32([[111,217],
+        [289,184],
+	[154,483],
+	[355,439]])
+```
+Se marcarmos este pontos na imagem original teremos a seguinte imagem:
+
+![ROI-da-carta](/img/ROI.png)
+ Vale ressaltar a importância da sequência dos pontos no array, que possuem a seguinte disposição na imagem.
+
+```python
+# 1 ---- 2
+# |      |
+# |      |
+# |      |
+# 3 ---- 4
+```
+Entretanto, a alteração da imagem ocorre no método ``ct.perspective(imported_image,source_points)``, que possui o seguinte código:
+
+```python
+def perspective(input_image,source_points):
+	## Define card size and position
+	card_height = 350
+	card_width  = 250
+
+	start_point = [0,0]
+	end_point   =[card_width,card_height]
+
+	destination_points = np.float32([start_point,
+				[card_width,0],
+				[0,card_height],
+				end_point])
+
+	transformation_matrix = cv2.getPerspectiveTransform(source_points,destination_points)
+	output_image = cv2.warpPerspective(input_image,transformation_matrix,(card_width,card_height))
+	return output_image
+```
+
+No início deste método são definidos a proporcionalidade da imagem no final da correção e os pontos que definirão esta nova imagem. Em seguida é calculada a matriz de transformação entre as duas regiões e que mapeia os pixels presentes na imagem fonte e os reposiciona na nova imagem. Lembrando que estas regiões são definidas pelos arrays de pontos de localização dos pixels.
+
+Finalmente é aplicada a matriz de transformação na ``input_imagem``, por meio do método ``.warpPerspective()`` e retorna ``output_image``, a imagem transformada.
+
+Ao executar o script ``perspective_transform.py`` a seguinte imagem do Rei de Espadas é mostrada na tela, sendo tirada e corrigida a partir da foto original ``./img/cards.jpg``:
+
+![k-espadas](img/k-espadas.png)
+
+
+
+## Correção da Oclusão
+
+Coming soon...
+
+```python
+#  Autor: Caio Maia - caiomaia3@gmail.com
+#  Este script tem o objetivo de resolver um desafio proposto no Centro de Competência em Robótica e Sistemas Autônomos do SENAI
+import cv2
+import numpy as np
+from numpy.lib.utils import source
+# from numpy.lib.utils import source
+from skimage import io
+import card_transformation as ct
+
+imported_image = io.imread("./img/cards.jpg")
+imported_image = cv2.cvtColor(imported_image,cv2.COLOR_BGR2RGB)
+
+# 1 ---- 2
+# |	 |
+# |	 |
+# |	 |
+# 3 ---- 4
+
+## K-Spades
+k_spades_points = np.float32([[111,217],
+        [289,184],
+	[154,483],
+	[355,439]])
+
+image_name = 'K-Spades'
+k_spades_image = ct.perspective(imported_image,k_spades_points)
+ct.show_image(image_name,k_spades_image)
+
+
+## K-Dimonds
+k_dimonds_points = np.float32([[275,116],
+	     [453,127],
+	     [259,366],
+	     [457,373]])
+
+source_points = k_dimonds_points
+base_image = ct.perspective(imported_image,source_points)
+
+## Define ROI (Region of Interest)
+crop_contour = np.array([[0,0],
+	     [250,0],
+	     [250,350]],np.int32)
+mask = ct.create_new_mask(base_image,crop_contour)
+
+flipped_image = cv2.bitwise_and(base_image,base_image,mask=mask)
+flipped_image = cv2.flip(flipped_image,-1)
+
+
+## Use flipped_image to repompose the K Dimonds Card.
+mask = np.zeros(base_image.shape[:2], dtype="uint8")
+crop_contour = np.array([[94,350],
+	     [0,350],
+	     [0,100],
+	     [25,100]],np.int32)
+
+cv2.drawContours(mask,[crop_contour],0,255,-1)
+inverse_mask = cv2.bitwise_not(mask)
+image_cropped_1 = cv2.bitwise_and(base_image,base_image,mask=inverse_mask)
+image_cropped_2 = cv2.bitwise_and(flipped_image,flipped_image,mask=mask)
+
+k_dimonds_image = cv2.add(image_cropped_1,image_cropped_2)
+image_name = "K-Dimonds"
+
+ct.show_image(image_name,k_dimonds_image)
+```
+
+
+
