@@ -14,18 +14,24 @@ O desafio consiste em realizar transformações em determinada imagem, de modo q
 
 ## Material de Apoio
 
+Na solução do desafio foi utilizado um material de apoio feito por outros bolsistas deste mesmo centro de competência. Este material pode ser encontrados nos seguintes links.
+
 - [Link do Minicurso do RoSA](https://github.com/Brazilian-Institute-of-Robotics/bir-mini-robotic-vision/tree/presentation)
 - [Google Coolab do Mini-curso](https://colab.research.google.com/drive/1ozEWpFhsqHC6vI3QS-IxH6HThysonxKq)
 
 
-## Preparação
+## 1 - Preparação
 
 Antes de trabalhar na solução é importante preparar um ambiente virtual, pois isto permite que a instalação de bibliotecas necessárias para aplicação não sejam instaladas no âmbito global do sistema.
 O pacote escolhido para esta função é o [Venv](https://docs.python.org/3/library/venv.html) e sua instalação segue os seguintes passos:
 
+- Instalação do Pip
+- Instação do Virtualenv e criação do ambiente virtual
+- instalação de pacotes no ambiente do Venv
+
 ### Instalação do Pip
 
-Utilizarei o **Ubuntu 20.04** para este trabalho, que possui o Python 3 já pré-instalado. Deste modo só precisarei instalar o **pip**, que é um instalador de pacotes para o Python. A instalação ocorre ao executar os seguintes comandos no terminal:
+Utilizarei o **Ubuntu 20.04** juntamente com o Python 3 para este trabalho, sendo este último já pré-instalado no sistema. Portanto, só é necessário instalar o **pip**, gerenciador de pacotes do Python. A instalação ocorre ao executar os seguintes comandos no terminal:
 
 ```console
 sudo apt update
@@ -34,12 +40,13 @@ sudo apt-get install python3-pip
 ```
 ### Instalação do Virtualenv e Criação do Ambiente
 
-Utilizando o **pip** podemos instalar o venv como seguinte comando no terminal:
+Utilizando o **pip** é simples instalar o Venv, bastando somente executar os seguintes comandos no terminal:
 
 ```console
 pip3 install virtualenv
 apt install python3.8-venv
 ```
+
 No Unbuntu 20.04 o pacote do venv esta associado ao Python3.8, mas a versão pode ser diferente em outras distribuições.
 
 Dentro da pasta que deseja criar o ambiente virtual execute o seguinte comando de terminal:
@@ -54,14 +61,13 @@ Se tudo ocorreu bem, deverá aparecer o nome do ambiente, (.venv) antes do nome 
 
 ![prompt-venv](img/readme/prompt.png)
 
-Para finalizar o processo instalarei uma extensão do VS Code que ativa automaticamente o ambiente no ambiente de desenvolvimento. Esta extensão é [Python Auto Venv](https://marketplace.visualstudio.com/items?itemName=whinarn.python-auto-venv) após instalar e reiniciar o VS Code o ambiente virtual será ativado automaticamente. Na interface do VS Code aparecerá versão do python e o nome do ambiente no canto inferior esquerdo.
+Para finalizar o processo é necessário apenas instalar uma extensão do VS Code que ativa automaticamente o ambiente virtual. A extensão a ser instalada é a [Python Auto Venv](https://marketplace.visualstudio.com/items?itemName=whinarn.python-auto-venv) e estará automaticamente ativa ao reiniciar o VS Code. Na interface do VS Code aparecerá versão do Python e o nome do ambiente, no canto inferior esquerdo:
 
 ![vscode-inter](img/readme/vscode-interface.png)
 
+## 2 - Instalação de Pacotes no Ambiente do Venv
 
-## Instalação de Pacotes no Ambiente
-
-Antes de utilizar funções básicas do OpenCV será necessário instalar alguns pacotes no ambiente virtual. Estes são: [numpy](https://numpy.org/), uma biblioteca numérica, [scikit-image](https://scikit-image.org/), para utilizar imagens da internet, e [opencv](https://opencv.org/). Nesta instalação será utilizada novamente o pip, mas agora no **ambiente virtual**. Portanto execute:
+Antes de utilizar funções básicas do OpenCV será necessário instalar alguns pacotes no ambiente virtual, dentre estes: [numpy](https://numpy.org/), uma biblioteca numérica, [scikit-image](https://scikit-image.org/), para utilizar imagens diretamente da internet, e [opencv](https://opencv.org/). Nesta instalação será utilizada novamente o pip, mas agora no **ambiente virtual**. Portanto execute:
 
 ```console
 python -m pip install -U pip
@@ -78,11 +84,10 @@ python src/open-cv-first-touch.py
 ```
 e a seguinte imagem deverá aparecer na tela. É possível que o script demore um pouco.
 
-![lenna](img/readme/lenna.png)
+![lenna](img/readme/carcara.jpg)
 
 
-## Correção de Perspectiva
-
+## 3 - Correção de Perspectiva
 
 A principal funcionalidade para  desafio é a correção de perspectiva, portanto, o primeiro passo do nosso processo de solução será esta correção.
 Para realizar esta tarefa utilizaremos o script ``perspective_transform.py``, que possui o seguinte código:
@@ -108,11 +113,12 @@ cv2.waitKey(0)
 cv2.destroyAllWindows()
 ```
 
-Na primeira secção do código são realizadas importações das bibliotecas: OpenCV, Numpy, scikit-image. A OpenCV é a biblioteca que mais iremos utilizar, para realizar transformações nas imagens de interesse. A Numpy é um biblioteca numérica para o Python e em nosso contexto oferece uma base para o trabalho no OpenCV, pois oferece a estrutura de dado que permite a representação das imagens em forma de array. Já a scikit-image é utilizada para realizar importação de imagens ``.jpg`` no formato de array do Numpy.
+Na primeira secção do código são realizadas importações das bibliotecas: OpenCV, Numpy, scikit-image. A OpenCV é a biblioteca que mais iremos utilizar, para realizar transformações nas imagens de interesse. A Numpy é um biblioteca numérica para o Python e  que em nosso contexto oferece uma base para o trabalho no OpenCV, pois oferece a estrutura de dado que permite a representação das imagens em forma de array. Já a scikit-image é utilizada para realizar importação de imagens ``.jpg`` no formato de array do Numpy.
 
-O pacote ``card_transformation.py`` é de autoria própria e abarca as funções que utilizaremos.
+Como apenas as funções do Python e das bibliotecas são insuficientes, será utilizado o pacote ``card_transformation.py``, sendo este também importado.
 
-A variável source_points` contém um array com os pontos, pares ordenados com a localização do pixel, que definem a região em que será realizada a transformação.
+Após a importação da imagem, é instanciada a  variável ``source_points`` contendo um array com os pontos que definem a região em que será realizada a transformação. Estes pontos são 
+ pares ordenados com a localização do pixel associado a imgagem.
 
 ```python
 source_points = np.float32([[111,217],
@@ -120,10 +126,11 @@ source_points = np.float32([[111,217],
 	[154,483],
 	[355,439]])
 ```
-Se marcarmos este pontos na imagem original teremos a seguinte imagem:
+Na imagem a seguir está marcada a localização destes pontos delimitantes.
 
 ![ROI-da-carta](/img/ROI.png)
- Vale ressaltar a importância da sequência dos pontos no array, que possuem a seguinte disposição na imagem.
+
+Vale ressaltar a importância da sequência dos pontos no array, que possuem a seguinte disposição na imagem.
 
 ```python
 # 1 ---- 2
@@ -132,7 +139,8 @@ Se marcarmos este pontos na imagem original teremos a seguinte imagem:
 # |      |
 # 3 ---- 4
 ```
-Entretanto, a alteração da imagem ocorre no método ``ct.perspective(imported_image,source_points)``, que possui o seguinte código:
+
+Do pacote ``card_transformation`` utilizaremos o método ``perspective``, que utilizará a marcação anterior na correção de perspectiva.
 
 ```python
 def perspective(input_image,source_points):
@@ -153,19 +161,17 @@ def perspective(input_image,source_points):
 	return output_image
 ```
 
-No início deste método são definidos a proporcionalidade da imagem no final da correção e os pontos que definirão esta nova imagem. Em seguida é calculada a matriz de transformação entre as duas regiões e que mapeia os pixels presentes na imagem fonte e os reposiciona na nova imagem. Lembrando que estas regiões são definidas pelos arrays de pontos de localização dos pixels.
+No método ``perspective`` são definidos a proporcionalidade da imagem final e os pontos que definirão esta nova imagem. Em seguida é calculada a matriz de transformação entre as duas regiões, para finalmente aplicar o método  ``.warpPerspective()`` na ``input_imagem``, que retorna  a imagem transformada ``output_image``.
 
-Finalmente é aplicada a matriz de transformação na ``input_imagem``, por meio do método ``.warpPerspective()`` e retorna ``output_image``, a imagem transformada.
+Ao executar o script ``perspective_transform.py`` a seguinte imagem do Rei de Espadas é mostrada na tela, sendo retirada e corrigida a partir da foto original ``./img/cards.jpg``:
 
-Ao executar o script ``perspective_transform.py`` a seguinte imagem do Rei de Espadas é mostrada na tela, sendo tirada e corrigida a partir da foto original ``./img/cards.jpg``:
+![k-espadas](img/k-spades.png)
 
-![k-espadas](img/k-espadas.png)
+## 4 - Correção da Oclusão
 
+ A estratégia utilizada para resolver o problema da oclusão será a utilização da simetria da carta. Portanto a ideia é primeiramente realizar a correção de perspectiva e em seguida compor uma imagem com partes da carta original.
 
-
-## Correção da Oclusão
-
-Coming soon...
+O código abaixo apresenta extração do Rei de Espadas e do Rei de Ouros.
 
 ```python
 #  Autor: Caio Maia - caiomaia3@gmail.com
@@ -181,9 +187,9 @@ imported_image = io.imread("./img/cards.jpg")
 imported_image = cv2.cvtColor(imported_image,cv2.COLOR_BGR2RGB)
 
 # 1 ---- 2
-# |	 |
-# |	 |
-# |	 |
+# |	     |
+# |	     |
+# |	     |
 # 3 ---- 4
 
 ## K-Spades
@@ -234,5 +240,26 @@ image_name = "K-Dimonds"
 ct.show_image(image_name,k_dimonds_image)
 ```
 
+### Explicação do Código
 
+No início do código é realizada importação e correção do Rei de Espadas, como no código anterior, sendo diferente a partir do comentário ``## K-Dimonds``.
+
+Inicialmente é definida a variável ``k_dimonds_points``, que contém os pontos que definirão a região ocupada pela carta. A diferença é que, como temos apenas parte da carta, teremos que estimar onde o ponto inferior esquerdo estaria e assim, com esta região definida, podemos realizar correção de perspectiva. Como resultado teremos a imagem ``base_image``, que será usada como base nas etapas posteriores.
+
+![k-ouros](img/readme/k-dimonds.png)
+
+Contudo, é necessário retirar parte da imagem, pois esta não pertence a carta de interesse.
+Para isto vamos recorrer ao conceito de mascara, que basicamente consiste em uma nova imagem que delimita a região de interesse. Deste modo, podemos extrair o conteúdo desejado com uma operação ``and`` bitwise entre duas matrizes, onde uma matriz é a imagem base e a outra a máscara.
+No código a região de interesse é delimitada pelos pontos presentes em ``crop_contour``, que é utilizado para gerar a máscara.
+
+
+![mask](img/readme/mask.png)
+
+Ao aplicar a máscara criada na imagem invertida teremos o recorte da região que cobrirá a imagem base.
+Ao aplicar a mascara invertida à imagem base teremos o K de Ouros com o canto inferior esquerdo retirado.
+Para gerar a imagem corrigida basta unir as duas imagem complementares.
+
+![k-ouros](img/readme/k-dimonds-fixed.png)
+
+A  mesma ideia pode ser aplicada a outras cartas e basta mudar a região do contorno a ser recortado.
 

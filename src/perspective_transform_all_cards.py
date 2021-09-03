@@ -35,25 +35,21 @@ k_dimonds_points = np.float32([[275,116],
 
 source_points = k_dimonds_points
 base_image = ct.perspective(imported_image,source_points)
+ct.show_image(image_name,base_image)
 
-## Define ROI (Region of Interest)
-crop_contour = np.array([[0,0],
-	     [250,0],
-	     [250,350]],np.int32)
-mask = ct.create_new_mask(base_image,crop_contour)
-
-flipped_image = cv2.bitwise_and(base_image,base_image,mask=mask)
+## Use flipped_image to repompose the K Dimonds Card.
+flipped_image = base_image 
 flipped_image = cv2.flip(flipped_image,-1)
 
 
-## Use flipped_image to repompose the K Dimonds Card.
+## Define ROI (Region of Interest)
 mask = np.zeros(base_image.shape[:2], dtype="uint8")
 crop_contour = np.array([[94,350],
 	     [0,350],
 	     [0,100],
 	     [25,100]],np.int32)
-
 cv2.drawContours(mask,[crop_contour],0,255,-1)
+ct.show_image(image_name,mask)
 inverse_mask = cv2.bitwise_not(mask)
 image_cropped_1 = cv2.bitwise_and(base_image,base_image,mask=inverse_mask)
 image_cropped_2 = cv2.bitwise_and(flipped_image,flipped_image,mask=mask)
